@@ -41,14 +41,25 @@ public class EventListener {
     /*
      Auto mapping
      */
-    @KafkaListener(topics = {"order-events", "payment-events"})
-    public void consumerAutoMapping(ConsumerRecord<String, Object> record){
-        if("order-events".equals(record.topic())){
-            Order order = (Order) record.value();
-            System.out.println("Order event consumed " + order.getOrderId());
-        } else if("payment-events".equals(record.topic())){
-            Payment payment = (Payment) record.value();
-            System.out.println("Payment event consumed " + payment.getPaymentId());
-        }
+//    @KafkaListener(topics = {"order-events", "payment-events"})
+//    public void consumerAutoMapping(ConsumerRecord<String, Object> record){
+//        if("order-events".equals(record.topic())){
+//            Order order = (Order) record.value();
+//            System.out.println("Order event consumed " + order.getOrderId());
+//        } else if("payment-events".equals(record.topic())){
+//            Payment payment = (Payment) record.value();
+//            System.out.println("Payment event consumed " + payment.getPaymentId());
+//        }
+//    }
+
+    @KafkaListener(topics = "order-events", containerFactory = "orderKafkaListenereFactory")
+    public void consumerOrder(Order order){
+        // Business logics
+        System.out.println("Order event consumed ==> " + order.getOrderId());
+    }
+
+    @KafkaListener(topics="payment-events", containerFactory = "paymentKafkaListenerFactory")
+    public void consumerPayment(Payment payment){
+        System.out.println("Payment event consumer ====> "+payment.getPaymentId());
     }
 }
