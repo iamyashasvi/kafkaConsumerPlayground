@@ -27,15 +27,28 @@ public class EventListener {
     /*
         Manul mapping
      */
+//    @KafkaListener(topics = {"order-events", "payment-events"})
+//    public void consumerManullMapping(ConsumerRecord<String, String> record) {
+//        if("order-events".equals(record.topic())){
+//            Order order = objectMapper.readValue(record.value(), Order.class);
+//            System.out.println("Order event consumed " + order.getOrderId());
+//        } else if("payment-events".equals((record.topic()))){
+//            Payment payment = objectMapper.readValue(record.value(), Payment.class);
+//            System.out.println("Payment event consumed " + payment.getPaymentId());
+//        }
+//    }
+
+    /*
+     Auto mapping
+     */
     @KafkaListener(topics = {"order-events", "payment-events"})
-    public void consumerManullMapping(ConsumerRecord<String, String> record) {
+    public void consumerAutoMapping(ConsumerRecord<String, Object> record){
         if("order-events".equals(record.topic())){
-            Order order = objectMapper.readValue(record.value(), Order.class);
+            Order order = (Order) record.value();
             System.out.println("Order event consumed " + order.getOrderId());
-        } else if("payment-events".equals((record.topic()))){
-            Payment payment = objectMapper.readValue(record.value(), Payment.class);
+        } else if("payment-events".equals(record.topic())){
+            Payment payment = (Payment) record.value();
             System.out.println("Payment event consumed " + payment.getPaymentId());
         }
     }
-
 }
